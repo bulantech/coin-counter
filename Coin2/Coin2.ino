@@ -16,6 +16,8 @@ int count = 0;
 int countBuf = 0;
 int countDelay = 0;
 const int dalayVal = 250; // milisec
+//bool firstInsert = false;
+int firstInsertCount = 0; // 250ms per count, 4 count = 1 sec
 
 void setup() {
   pinMode(Relay1, OUTPUT); // กำหนดขาทำหน้าที่ให้ขา D0 เป็น OUTPUT
@@ -41,6 +43,12 @@ void loop() {
     Serial.printf("countDelay: %d \r\n", countDelay);
   }
 
+  if(firstInsertCount) {
+    firstInsertCount--;
+    delay(250);
+    return;
+  }
+  
   if(countDelay) {
     countDelay -= dalayVal;
     digitalWrite(Relay1, LOW); //close, on
@@ -63,4 +71,7 @@ void loop() {
 void doCounter() {
   count++; 
   countDelay = countDelay+(dalayVal*100); // 1บาทรีเลย์ทำงาน 25วินาที 
+  if(count==1) {
+    firstInsertCount = 40; // 40 count = 10 sec
+  }
 }
